@@ -17,13 +17,18 @@ import edu.uoc.pac4.data.SessionManager
 import edu.uoc.pac4.data.TwitchApiService
 import edu.uoc.pac4.data.network.Endpoints
 import edu.uoc.pac4.data.network.Network
+import edu.uoc.pac4.data.oauth.OAuthAuthenticationRepository
 import edu.uoc.pac4.data.oauth.OAuthConstants
+import edu.uoc.pac4.data.streams.TwitchStreamsRepository
 import kotlinx.android.synthetic.main.activity_oauth.*
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class OAuthActivity : AppCompatActivity() {
 
     private val TAG = "StreamsActivity"
+
+    val oAuthAuthenticationRepository: OAuthAuthenticationRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

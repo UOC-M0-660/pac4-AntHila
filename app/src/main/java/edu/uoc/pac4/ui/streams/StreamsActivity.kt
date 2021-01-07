@@ -14,10 +14,13 @@ import edu.uoc.pac4.data.SessionManager
 import edu.uoc.pac4.data.TwitchApiService
 import edu.uoc.pac4.data.network.Network
 import edu.uoc.pac4.data.network.UnauthorizedException
+import edu.uoc.pac4.data.streams.TwitchStreamsRepository
+import edu.uoc.pac4.data.user.TwitchUserRepository
 import edu.uoc.pac4.ui.login.LoginActivity
 import edu.uoc.pac4.ui.profile.ProfileActivity
 import kotlinx.android.synthetic.main.activity_streams.*
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class StreamsActivity : AppCompatActivity() {
 
@@ -26,7 +29,7 @@ class StreamsActivity : AppCompatActivity() {
     private val adapter = StreamsAdapter()
     private val layoutManager = LinearLayoutManager(this)
 
-    private val twitchApiService = TwitchApiService(Network.createHttpClient(this))
+    val twitchStreamsRepository: TwitchStreamsRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,11 +75,12 @@ class StreamsActivity : AppCompatActivity() {
         // Get Twitch Streams
         lifecycleScope.launch {
             try {
-                twitchApiService.getStreams(cursor)?.let { response ->
+                //twitchApiService.getStreams(cursor)?.let { response ->
+                twitchStreamsRepository.getStreams(cursor)?.let { response ->
                     // Success :)
                     Log.d("StreamsActivity", "Got Streams: $response")
 
-                    val streams = response.data.orEmpty()
+                    val streams = response.second.orEmpty()
                     // Update UI with Streams
                     if (cursor != null) {
                         // We are adding more items to the list
@@ -86,7 +90,7 @@ class StreamsActivity : AppCompatActivity() {
                         adapter.submitList(streams)
                     }
                     // Save cursor for next request
-                    nextCursor = response.pagination?.cursor
+                    nextCursor = response.first
 
                 } ?: run {
                     // Error :(

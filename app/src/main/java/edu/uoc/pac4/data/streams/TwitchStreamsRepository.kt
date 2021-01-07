@@ -12,33 +12,14 @@ import io.ktor.client.request.parameter
  * Created by alex on 11/21/20.
  */
 
-class TwitchStreamsRepository(private val httpClient: HttpClient) : StreamsRepository {
+class TwitchStreamsRepository(private val twitchStreamsDataSource: TwitchStreamsDataSource) : StreamsRepository {
 
     private val TAG = "TwitchStreamsRepository"
 
-    @Throws(UnauthorizedException::class)
-    override suspend fun getStreams(cursor: String? = null): StreamsResponse? {
+    override suspend fun getStreams(cursor: String?): Pair<String?, List<Stream>?> {
+        val response = twitchStreamsDataSource.getStreams()
 
-        try {
-            val response = httpClient
-                    .get<StreamsResponse>(Endpoints.streamsUrl) {
-                        cursor?.let { parameter("after", it) }
-                    }
-            return response
-        } catch (t: Throwable) {
-            Log.w(TAG, "Error getting streams", t)
-            // Try to handle error
-            return when (t) {
-                is ClientRequestException -> {
-                    // Check if it's a 401 Unauthorized
-                    if (t.response?.status?.value == 401) {
-                        throw UnauthorizedException
-                    }
-                    null
-                }
-                else -> null
-            }
-        }
+        return Pair(response?.pagination?.cursor, response?.data)
     }
 
 }
