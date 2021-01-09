@@ -29,7 +29,7 @@ class StreamsActivity : AppCompatActivity() {
     private val adapter = StreamsAdapter()
     private val layoutManager = LinearLayoutManager(this)
 
-    val twitchStreamsRepository: TwitchStreamsRepository by inject()
+    private val twitchStreamsRepository: TwitchStreamsRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -26,7 +26,7 @@ import org.koin.android.ext.android.inject
 
 class OAuthActivity : AppCompatActivity() {
 
-    private val TAG = "StreamsActivity"
+    private val TAG = "OAuthActivity"
 
     val oAuthAuthenticationRepository: OAuthAuthenticationRepository by inject()
 
@@ -34,17 +34,6 @@ class OAuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_oauth)
         launchOAuthAuthorization()
-    }
-
-    fun buildOAuthUri(): Uri {
-        return Uri.parse(Endpoints.authorizationUrl)
-            .buildUpon()
-            .appendQueryParameter("client_id", OAuthConstants.clientID)
-            .appendQueryParameter("redirect_uri", OAuthConstants.redirectUri)
-            .appendQueryParameter("response_type", "code")
-            .appendQueryParameter("scope", OAuthConstants.scopes.joinToString(separator = " "))
-            .appendQueryParameter("state", OAuthConstants.uniqueState)
-            .build()
     }
 
     private fun launchOAuthAuthorization() {
@@ -88,6 +77,17 @@ class OAuthActivity : AppCompatActivity() {
         // Load OAuth Uri
         webView.settings.javaScriptEnabled = true
         webView.loadUrl(uri.toString())
+    }
+
+    private fun buildOAuthUri(): Uri {
+        return Uri.parse(Endpoints.authorizationUrl)
+                .buildUpon()
+                .appendQueryParameter("client_id", OAuthConstants.clientID)
+                .appendQueryParameter("redirect_uri", OAuthConstants.redirectUri)
+                .appendQueryParameter("response_type", "code")
+                .appendQueryParameter("scope", OAuthConstants.scopes.joinToString(separator = " "))
+                .appendQueryParameter("state", OAuthConstants.uniqueState)
+                .build()
     }
 
     // Call this method after obtaining the authorization code

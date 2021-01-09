@@ -1,6 +1,7 @@
 package edu.uoc.pac4.data.oauth
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -12,13 +13,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 
-class OAuthAuthenticationDataSource (private val httpClient: HttpClient) {
+class OAuthAuthenticationDataSource (private val httpClient: HttpClient, val context: Context) {
 
     private val TAG = "OAuthAuthenticationDataSource"
-
-    suspend fun isUserAvailable(): Boolean {
-        TODO("Not yet implemented")
-    }
 
     @SuppressLint("LongLogTag")
     suspend fun login(authorizationCode: String): Boolean {
@@ -41,13 +38,5 @@ class OAuthAuthenticationDataSource (private val httpClient: HttpClient) {
         }
     }
 
-    suspend fun logout() {
-        // Clear local session data
-        SessionManager(this).clearAccessToken()
-        SessionManager(this).clearRefreshToken()
-        // Close this and all parent activities
-        ActivityCompat.finishAffinity()
-        // Open Login
-        ContextCompat.startActivity(Intent(this, LoginActivity::class.java))
-    }
+
 }

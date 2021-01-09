@@ -9,6 +9,7 @@ import edu.uoc.pac4.data.streams.TwitchStreamsRepository
 import edu.uoc.pac4.data.user.TwitchUserDataSource
 import edu.uoc.pac4.data.user.TwitchUserRepository
 import edu.uoc.pac4.data.user.UserRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 /**
@@ -18,9 +19,9 @@ import org.koin.dsl.module
 val dataModule = module {
 
     // Streams example
-    single<StreamsRepository> { TwitchStreamsRepository() }
-    single<UserRepository> { TwitchUserRepository() }
-    single<AuthenticationRepository> { OAuthAuthenticationRepository() }
+    single<StreamsRepository> { TwitchStreamsRepository(TwitchStreamsDataSource(get())) }
+    single<UserRepository> { TwitchUserRepository(TwitchUserDataSource(get ())) }
+    single<AuthenticationRepository> { OAuthAuthenticationRepository(OAuthAuthenticationDataSource(get(),androidContext()),androidContext()) }
 
     //Factories User
     factory { TwitchUserRepository(get()) }
@@ -31,7 +32,7 @@ val dataModule = module {
     factory { TwitchStreamsDataSource(get()) }
 
     //Factories OAuth
-    factory { OAuthAuthenticationRepository(get()) }
-    factory { OAuthAuthenticationDataSource(get()) }
+    factory { OAuthAuthenticationRepository(get(),androidContext()) }
+    factory { OAuthAuthenticationDataSource(get(),androidContext()) }
 
 }

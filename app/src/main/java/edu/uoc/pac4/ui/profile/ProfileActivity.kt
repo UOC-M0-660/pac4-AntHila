@@ -28,7 +28,7 @@ class ProfileActivity : AppCompatActivity() {
 
     private val TAG = "ProfileActivity"
 
-    val twitchUserRepository: TwitchUserRepository by inject()
+    private val twitchUserRepository: TwitchUserRepository by inject()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
